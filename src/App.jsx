@@ -6,13 +6,22 @@ import './App.css';
 function App() {
   const [name, setName] = useState('');
   const [list, setList] = useState([]);
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditID] = useState(null);
   const [alert, setAlert] = useState({ show: false, msgn: '', type: '' });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Hello from the console');
+    if (!name) {
+      // display alert
+    } else if (name && isEditing) {
+      // deal with edit
+    } else {
+      // show alert
+      const newItem = { id: new Date().getTime().toString(), title: name };
+      setList([...list, newItem]);
+      setName('');
+    }
   };
 
   return (
@@ -26,17 +35,19 @@ function App() {
             className='grocery'
             placeholder='e.g. Eggs'
             value={name}
-            onChange={() => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
           <button type='submit' className='submit-btn'>
             {isEditing ? 'edit' : 'submit'}
           </button>
         </div>
       </form>
-      <div className='grocery-container'>
-        <List />
-        <button className='clear-btn'>Clear Items</button>
-      </div>
+      {list.length > 0 && (
+        <div className='grocery-container'>
+          <List items={list} />
+          <button className='clear-btn'>Clear Items</button>
+        </div>
+      )}
     </section>
   );
 }
